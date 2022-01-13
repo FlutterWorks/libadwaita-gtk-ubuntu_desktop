@@ -1,12 +1,12 @@
-import 'flap_home_page.dart';
+import 'package:adwaita/adwaita.dart';
+import 'package:example/flap/flap_home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:adwaita/adwaita.dart' as adwaita;
 
 class FlapDemo extends StatelessWidget {
+  FlapDemo({Key? key}) : super(key: key);
+
   final ValueNotifier<ThemeMode> themeNotifier =
       ValueNotifier(ThemeMode.system);
-
-  FlapDemo({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +14,8 @@ class FlapDemo extends StatelessWidget {
       valueListenable: themeNotifier,
       builder: (_, ThemeMode currentMode, __) {
         return MaterialApp(
-          theme: adwaita.lightTheme,
-          darkTheme: adwaita.darkTheme,
+          theme: AdwaitaThemeData.light(),
+          darkTheme: AdwaitaThemeData.dark(),
           debugShowCheckedModeBanner: false,
           home: FlapHomePage(themeNotifier: themeNotifier),
           themeMode: currentMode,

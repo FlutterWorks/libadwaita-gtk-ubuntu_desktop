@@ -1,8 +1,10 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:example/pages/avatar_page.dart';
 import 'package:example/pages/counter_page.dart';
 import 'package:example/pages/flap_page.dart';
 import 'package:example/pages/lists_page.dart';
 import 'package:example/pages/settings_page.dart';
+import 'package:example/pages/style_classes_page.dart';
 import 'package:example/pages/view_switcher_page.dart';
 import 'package:example/pages/welcome.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +12,9 @@ import 'package:libadwaita/libadwaita.dart';
 import 'package:window_decorations/window_decorations.dart';
 
 class MyHomePage extends StatefulWidget {
-  final ValueNotifier<ThemeMode> themeNotifier;
-
   const MyHomePage({Key? key, required this.themeNotifier}) : super(key: key);
+
+  final ValueNotifier<ThemeMode> themeNotifier;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -55,47 +57,43 @@ class _MyHomePageState extends State<MyHomePage> {
         AdwHeaderBar.bitsdojo(
           appWindow: appWindow,
           windowDecor: windowDecor,
-          start: Row(
-            children: [
-              Builder(
-                builder: (context) {
-                  return AdwHeaderButton(
-                    icon: const Icon(Icons.view_sidebar, size: 15),
-                    isActive: _flapController.isOpen,
-                    onPressed: () {
-                      _flapController.toggle();
+          start: [
+            Builder(
+              builder: (context) {
+                return AdwHeaderButton(
+                  icon: const Icon(Icons.view_sidebar, size: 15),
+                  isActive: _flapController.isOpen,
+                  onPressed: () {
+                    _flapController.toggle();
+                  },
+                );
+              },
+            ),
+            AdwHeaderButton(
+              icon: const Icon(Icons.nightlight_round, size: 15),
+              onPressed: changeTheme,
+            ),
+          ],
+          title: const Text('Libadwaita Demo'),
+          end: [
+            AdwPopupMenu(
+              body: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    onTap: () {
+                      counter.value = 0;
+                      Navigator.of(context).pop();
                     },
-                  );
-                },
-              ),
-              AdwHeaderButton(
-                icon: const Icon(Icons.nightlight_round, size: 15),
-                onPressed: changeTheme,
-              ),
-            ],
-          ),
-          title: const Text("Libadwaita Demo"),
-          end: Row(
-            children: [
-              AdwPopupMenu(
-                body: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      onTap: () {
-                        counter.value = 0;
-                        Navigator.of(context).pop();
-                      },
-                      title: const Text(
-                        'Reset Counter',
-                        style: TextStyle(fontSize: 15),
-                      ),
+                    title: const Text(
+                      'Reset Counter',
+                      style: TextStyle(fontSize: 15),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         Expanded(
           child: AdwScaffold(
@@ -103,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
             drawer: Drawer(
               child: AdwSidebar(
                 currentIndex: _currentIndex,
-                children: [
+                children: const [
                   AdwSidebarItem(
                     label: 'Welcome',
                   ),
@@ -114,6 +112,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     label: 'Lists',
                   ),
                   AdwSidebarItem(
+                    label: 'Avatar',
+                  ),
+                  AdwSidebarItem(
                     label: 'Flap',
                   ),
                   AdwSidebarItem(
@@ -121,24 +122,24 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   AdwSidebarItem(
                     label: 'Settings',
+                  ),
+                  AdwSidebarItem(
+                    label: 'Style Classes',
                   )
                 ],
                 onSelected: (index) {
-                  setState(
-                    () {
-                      _currentIndex = index;
-                      Navigator.of(context).pop();
-                    },
-                  );
+                  setState(() {
+                    _currentIndex = index;
+                    Navigator.of(context).pop();
+                  });
                 },
               ),
             ),
             body: AdwFlap(
               flapController: _flapController,
-              foldPolicy: FoldPolicy.auto,
               flap: AdwSidebar(
                 currentIndex: _currentIndex,
-                children: [
+                children: const [
                   AdwSidebarItem(
                     label: 'Welcome',
                   ),
@@ -149,6 +150,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     label: 'Lists',
                   ),
                   AdwSidebarItem(
+                    label: 'Avatar',
+                  ),
+                  AdwSidebarItem(
                     label: 'Flap',
                   ),
                   AdwSidebarItem(
@@ -156,6 +160,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   AdwSidebarItem(
                     label: 'Settings',
+                  ),
+                  AdwSidebarItem(
+                    label: 'Style Classes',
                   )
                 ],
                 onSelected: (index) {
@@ -166,15 +173,17 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               child: AdwViewStack(
                 animationDuration: const Duration(milliseconds: 100),
+                index: _currentIndex,
                 children: [
                   const WelcomePage(),
                   CounterPage(counter: counter),
                   const ListsPage(),
+                  const AvatarPage(),
                   const FlapPage(),
                   const ViewSwitcherPage(),
                   const SettingsPage(),
+                  const StyleClassesPage(),
                 ],
-                index: _currentIndex,
               ),
             ),
           ),
